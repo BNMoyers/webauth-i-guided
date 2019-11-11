@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
 
 const authRouter = require('../auth/auth-router.js');
 const usersRouter = require('../users/users-router.js');
@@ -15,6 +16,10 @@ router.post('/hash', (req, res) => {
   //hash the password
   //return it to the user in an object that looks like:
   // { password: 'original password', hash: 'hashed password' }
+  const credentials = req.body;
+  const hash = bcrypt.hashSync(credentials.password, 14);
+  credentials.password = hash;
+  return res.status(201).json({ password: credentials.password, hash: hash}) 
 })
 
 module.exports = router;
